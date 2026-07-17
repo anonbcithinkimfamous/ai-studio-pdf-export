@@ -60,17 +60,6 @@ When Google changes the AI Studio DOM:
 4. Update the selectors in `content.js` → `SELECTORS` object
 5. Reload the extension
 
-## Publishing to Chrome Web Store
-
-When ready to publish:
-
-1. Create a developer account at the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/)
-2. Pay the one-time $5 registration fee
-3. Zip the `extension` folder
-4. Upload the zip
-5. Fill in store listing (description, screenshots, etc.)
-6. Submit for review
-
 ## Known Limitations
 
 - Google AI Studio is an Angular SPA; DOM structure may change without notice
