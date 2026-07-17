@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Studio PDF Export</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 340px;
+      font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 16px 20px 12px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header h1 svg {
+      color: #4dabf7;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .content {
+      padding: 16px 20px;
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.4;
+    }
+
+    .status.info {
+      background: rgba(77, 171, 247, 0.1);
+      border: 1px solid rgba(77, 171, 247, 0.2);
+      color: #4dabf7;
+    }
+
+    .status.success {
+      background: rgba(81, 207, 102, 0.1);
+      border: 1px solid rgba(81, 207, 102, 0.2);
+      color: #51cf66;
+    }
+
+    .status.error {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      color: #ff6b6b;
+    }
+
+    .status.working {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .options {
+      margin-bottom: 14px;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .option-row label {
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    select {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+
+    select option {
+      background: #1a1a2e;
+    }
+
+    .btn-export {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-export:hover {
+      background: linear-gradient(135deg, #339af0 0%, #228be6 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(51, 154, 240, 0.3);
+    }
+
+    .btn-export:active {
+      transform: translateY(0);
+    }
+
+    .btn-export:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .footer {
+      padding: 10px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer a {
+      font-size: 11px;
+      color: #555;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #4dabf7;
+    }
+
+    .preview {
+      margin-bottom: 14px;
+      max-height: 120px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .preview .msg {
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .preview .msg:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .preview .role {
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .preview .role.user { color: #4dabf7; }
+    .preview .role.model { color: #51cf66; }
+
+    .preview .text {
+      color: #999;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+      AI Studio PDF Export
+    </h1>
+    <p>Export your conversations accurately</p>
+  </div>
+
+  <div class="content">
+    <!-- Status -->
+    <div id="status" class="status info">
+      <span>Checking for conversation...</span>
+    </div>
+
+    <!-- Stats (shown after scrape) -->
+    <div id="stats" class="stats hidden">
+      <div class="stat">
+        <div class="stat-label">Messages</div>
+        <div class="stat-value" id="msgCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Words</div>
+        <div class="stat-value" id="wordCount">0</div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div id="preview" class="preview hidden"></div>
+
+    <!-- Options -->
+    <div id="optionsSection" class="options hidden">
+      <div class="option-row">
+        <label>Paper size</label>
+        <select id="paperSize">
+          <option value="a4">A4</option>
+          <option value="letter" selected>Letter</option>
+        </select>
+      </div>
+      <div class="option-row">
+        <label>Font size</label>
+        <select id="fontSize">
+          <option value="10">Small (10pt)</option>
+          <option value="11" selected>Medium (11pt)</option>
+          <option value="12">Large (12pt)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Export Button -->
+    <button id="btnExport" class="btn-export" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      <span id="btnLabel">Export to PDF</span>
+    </button>
+  </div>
+
+  <div class="footer">
+    <a href="#">AI Studio PDF Export v1.0.0</a>
+  </div>
+
+  <script src="../lib/jspdf.umd.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

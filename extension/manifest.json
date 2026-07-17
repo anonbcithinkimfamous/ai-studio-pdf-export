@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "AI Studio PDF Export",
+  "version": "1.0.0",
+  "description": "Export your Google AI Studio conversations to accurate, well-formatted PDFs.",
+  "permissions": ["activeTab", "scripting", "downloads"],
+  "host_permissions": [
+    "https://aistudio.google.com/*",
+    "https://alkalimakersuite-pa.clients6.google.com/*"
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://aistudio.google.com/*"],
+      "js": ["lib/jspdf.umd.min.js", "src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/jspdf.umd.min.js"],
+      "matches": ["https://aistudio.google.com/*"]
+    }
+  ]
+}
