@@ -7,7 +7,7 @@ Chrome extension that exports Google AI Studio conversations to accurate, well-f
 1. Open Chrome and go to `chrome://extensions/`
 2. Enable **Developer mode** (toggle in top right)
 3. Click **Load unpacked**
-4. Select the `extension` folder from this project
+4. Select the root folder of this repo
 5. Navigate to [Google AI Studio](https://aistudio.google.com) and start a conversation
 
 ## Usage
@@ -26,7 +26,6 @@ Click the extension icon in your Chrome toolbar. The popup will:
 ## Architecture
 
 ```
-extension/
 ├── manifest.json          # MV3 manifest
 ├── icons/                 # Extension icons
 ├── lib/
