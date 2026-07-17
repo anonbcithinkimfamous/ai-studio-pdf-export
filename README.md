@@ -1,23 +1,25 @@
 # AI Studio PDF Export
 
-Chrome extension that exports Google AI Studio conversations to accurate, well-formatted PDFs.
-
-## What It Is
-
 AI Studio PDF Export is a Chrome extension that saves any Google AI Studio conversation as a formatted PDF without leaving the browser. Instead of scraping the visible page, it intercepts the same internal API request that AI Studio uses to load conversations, pulling the raw data directly and accurately regardless of how long the chat is. Authentication is handled automatically by reading your existing SAPISID session cookie and computing a SAPISIDHASH token, so no login or separate API key is required. The extension formats the conversation with clearly labeled user and model turns, applies your chosen font size and paper dimensions, and generates the PDF entirely client-side using jsPDF. No data leaves your machine and no server is involved. The output captures the full conversation including long responses and code blocks that a standard browser print-to-PDF would cut off or mangle. A floating button appears on every AI Studio conversation page for one-click export, and the extension popup gives you additional controls before generating the file.
 
 ## Download
 
+**Option A: Browser**
 1. Click the green **Code** button at the top of this page
 2. Click **Download ZIP**
 3. Extract the ZIP file to a folder on your computer
+
+**Option B: Terminal**
+```bash
+git clone https://github.com/zaydkhalid/ai-studio-pdf-export.git
+```
 
 ## Installation (Developer Mode)
 
 1. Open Chrome and go to `chrome://extensions/`
 2. Enable **Developer mode** (toggle in top right)
 3. Click **Load unpacked**
-4. Select the extracted folder
+4. Select the downloaded folder
 5. Navigate to [Google AI Studio](https://aistudio.google.com) and start a conversation
 
 ## Usage
